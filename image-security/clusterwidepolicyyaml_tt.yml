@@ -1,0 +1,16 @@
+## Cluster Wide Policy .YAML - FALSE/FALSE
+
+apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: ibmcloud-default-cluster-image-policy
+spec:
+   repositories:
+    # This enforces that all images deployed to this cluster pass trust and VA
+    # To override, set an ImagePolicy for a specific Kubernetes namespace or modify this policy
+    - name: "*"
+      policy:
+        trust:
+          enabled: true
+        va:
+          enabled: true
