@@ -1,4 +1,4 @@
-## Cluster Wide Policy .YAML - FALSE/FALSE
+# Cluster Wide Policy .YAML - TRUE/TRUE
 
 apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
 kind: ClusterImagePolicy
