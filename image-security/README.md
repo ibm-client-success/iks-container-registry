@@ -5,5 +5,4 @@ This folder contains the ```.yaml``` files used in Enforcing container image sec
 
 ----
 1. Copy and create the ```.yaml``` file on local host
-2. Create the ```.yaml``` file by executing: 
-```kubectl apply -f <YAML_FILE_NAME>.yaml``` 
+2. Create the ```.yaml``` file by executing: ```kubectl apply -f <YAML_FILE_NAME>.yaml``` 
