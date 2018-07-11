@@ -1,4 +1,4 @@
-# Tomcat Deployment file. Be sure to modify the "image:" link address to fit your enviroment
+# Tomcat Deployment file example. Be sure to modify the "image:" link address to fit your enviroment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
