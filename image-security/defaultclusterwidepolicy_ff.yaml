@@ -10,6 +10,6 @@ spec:
     - name: "*"
       policy:
         trust:
-          enabled: true
+          enabled: false
         va:
-          enabled: true
+          enabled: false
