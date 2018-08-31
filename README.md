@@ -32,7 +32,7 @@ Using the [docker commands](https://docs.docker.com/engine/reference/commandline
 #### Figure 3 - Docker Images Inside a namespace Repository
 <img width="1003" alt="image" src="https://media.github.ibm.com/user/20538/files/a16c4654-6f21-11e8-8586-c247cc02cbfd">
 
-The security reports are accessible via the GUI from the [Bluemix console](https://console.bluemix.net) which provides a detailed, user-friendly dashboard about the vulnerabilities of an image residing in the namespace. Furthermore, by clicking on an image in the GUI, infomation about specific vulnerabilites and how to resolve the listed security issues becomes visible the specific image. 
+The security reports are accessible via the GUI from the [Bluemix console](https://console.bluemix.net) which provides a detailed, user-friendly dashboard about the vulnerabilities of an image residing in the namespace. Furthermore, by clicking on an image in the GUI, information about specific vulnerabilities and how to resolve the listed security issues becomes visible the specific image. 
 
 #### Figure 4 - Docker Images Residing in a namespace in a Private Repository 
 <img width="1425" alt="image" src="https://media.github.ibm.com/user/20538/files/47beeeca-6fbe-11e8-9fbc-ebf381ecf895">
@@ -64,13 +64,13 @@ For example, in **figure 8** below, some Docker commands are provided to **push*
 
 ## Overview
 
-Image containers can be verified for security issues before they are deployed into a cluster in IBM® Cloud Kubernetes Service. The verification is handeled by policy or policies that are in place in the enviroment. The images can be controlled from where they are deployed, and the policies on them can ensure that they are also coming from a trusted source and meet security compliance. For example, if a particular pod does not meet a specific security policy that is in place, then the cluster will not be modified and the pod will be prevented from being deployed.    
+Image containers can be verified for security issues before they are deployed into a cluster in IBM® Cloud Kubernetes Service. The verification is handled by policy or policies that are in place in the environment. The images can be controlled from where they are deployed, and the policies on them can ensure that they are also coming from a trusted source and meet security compliance. For example, if a particular pod does not meet a specific security policy that is in place, then the cluster will not be modified and the pod will be prevented from being deployed.    
 
 "_IBM Container Image Security Enforcement gets the information about image content trust and vulnerabilities from IBM® Cloud Container Registry. You can choose whether to block or allow images from other registries in your policies, but you cannot use vulnerability or trust enforcement for these images_".
 
 ## Discoveries
 
-Figure 1 below is a sample policy, Default cluster-wide policy, that can be implemented in a cluster enviroment. The focus on this particular policy are the components *trust* and *va*: 
+Figure 1 below is a sample policy, Default cluster-wide policy, that can be implemented in a cluster environment. The focus on this particular policy are the components *trust* and *va*: 
 
 ```
 policy:
@@ -79,7 +79,7 @@ policy:
         va:
           enabled: true
 ```
-In summary, these two specifications in this policy determine whether an image meet the security requirememts inside the specific cluster. The **trust:** section looks for a trusted, signed image where the key is pulled from a trusted server. The **va:** section determines if the image has passed or failed a security scan performed by the Vulnerability Advisor. When both **trust:** and **va:** are set to **true** it indicates that they are both active or as listed in the policy **enabled**. When either one of these settings are set to **false** it means that the policy will bypass that particular component and the image will pass regardless of any existing security issue it may have.
+In summary, these two specifications in this policy determine whether an image meet the security requirements inside the specific cluster. The **trust** section looks for a trusted, signed image where the key is pulled from a trusted server. The **va** section determines if the image has passed or failed a security scan performed by the Vulnerability Advisor. When both **trust** and **va** are set to **true** it indicates that they are both active or as listed in the policy **enabled**. When either one of these settings are set to **false** it means that the policy will bypass that particular component and the image will pass regardless of any existing security issue it may have.
 
 In figures 2 - 4 there are live demonstration screenshots that display the results of a pod deployment affected by these policy settings discussed thus far.
 
@@ -101,10 +101,10 @@ There are other policies similar to the **Default Cluster-Wide policy**, for exa
 # Livescan - Image Security with Vulnerability Advisor
 ---
 ### Overview
-Livescan with Vulnerability Advisor provides security management for IBM® Cloud Kubernetes Service. The Vulnerability Advisor generates a security status report, suggests fixes and best practices, and provides management to restrict nonsecure images from running inside of a cluster.
+Livescan with Vulnerability Advisor provides security management for IBM® Cloud Kubernetes Service. The Vulnerability Advisor generates a security status report, suggests fixes and best practices, and provides management to restrict non-secure images from running inside of a cluster.
 
-### Managing Image Security Livescan with Vulnerability Advisor
-According to Container Service Development member, Kristin Kronstain Brown, this feature Image Security Livescan is currently **not** available with the Vulnerability Advisor in the production environment at this time. Though, staging documentation can be found [here](https://console.stage1.bluemix.net/docs/services/va/va_index.html#va_reviewing_container).
+### Managing Image Security Live-scan with Vulnerability Advisor
+According to Container Service Development member, Kristin Kronstain Brown, this feature Image Security Live-scan is currently **not** available with the Vulnerability Advisor in the production environment at this time. Though, staging documentation can be found [here](https://console.stage1.bluemix.net/docs/services/va/va_index.html#va_reviewing_container).
 
 # Step-by-Step Demonstration - Enforcing Container Image Security (beta) Using Custom Policy
 
@@ -112,12 +112,13 @@ According to Container Service Development member, Kristin Kronstain Brown, this
 
 - A cluster with Kubernetes version 1.9 or higher. Tutorial: Creating Kubernetes clusters can be found [here](https://console.bluemix.net/docs/containers/cs_tutorials.html#cs_cluster_tutorial).
 
-- Helm. Setting up Helm can be found [here](https://console.bluemix.net/docs/containers/cs_integrations.html#helm)
+- Helm. Setting up Helm and installing default policies can be found [here](https://console.bluemix.net/docs/containers/cs_integrations.html#helm)
 
 - A namespace. How to set up a namespace can be found [here](https://console.bluemix.net/docs/services/Registry/index.html#registry_namespace_add)
 
 ```
-$ https://github.com/ibm-client-success/iks-container-registry.git && cd contents
+$ https://github.com/ibm-client-success/iks-container-registry.git
+$ cd iks-container-registry
 ```
 
 ### Abstract:
@@ -149,7 +150,7 @@ permitted to configure the cluster and to install or upgrade Image Security Enfo
 
 ### What will I explore in this article?
 
-This blog will focus on the default **cluster-wide policy** and its two important flag components: **“va:”** and **“trust:”** as shown in Figure 1. Before moving forward, it is important to explain that _“va:”_ stands for **Vulnerability Advisor** and its primary function is to scan images for any security vulnerabilities. The main function of the _“trust:”_ flag is to ensure the image’s integrity, to confirm that it’s **signed**, and be sure that it originated from a trusted source. Signing an image and verifying its integrity is explained in detail [here](https://console.bluemix.net/docs/services/Registry/registry_trusted_content.html#registry_trustedcontent). 
+This blog will focus on the default **cluster-wide policy** and its two important flag components: **“va”** and **“trust”** as shown in Figure 1. Before moving forward, it is important to explain that _“va”_ stands for **Vulnerability Advisor** and its primary function is to scan images for any security vulnerabilities. The main function of the _“trust”_ flag is to ensure the image’s integrity, to confirm that it’s **signed**, and be sure that it originated from a trusted source. Signing an image and verifying its integrity is explained in detail [here](https://console.bluemix.net/docs/services/Registry/registry_trusted_content.html#registry_trustedcontent). 
 
 **Figure 1 – An Example of a Default Cluster-Wide Policy.yaml File**
 
@@ -172,7 +173,7 @@ The figure below shows the four possible combinations of the component flags in 
 
 In this section, we’ll see the outcomes of different custom policies applied against an image.
 
-The image list in Figure 4 displays information that can differ when the default cluster-wide policy flags **“trust:”** and **“va:”** are modified.
+The image list in Figure 4 displays information that can differ when the default cluster-wide policy flags **“trust”** and **“va”** are modified.
 
 ```$ bx cr images```
 
@@ -183,11 +184,11 @@ The image list in Figure 4 displays information that can differ when the default
 Figure 4 displays the list of images in a namespace. 
 As shown, there are few images with security issues and others with no security issues. We can see how the deployment of these images will be affected when we enforce image security using a default Cluster-Wide policy. 
 
-Below, we will see the outcomes of four different cases of custom policies by changing the “trust:” and “va:” flags from DefaultCluster-wide.yaml , applied against the images.
+Below, we will see the outcomes of four different cases of custom policies by changing the “trust” and “va” flags from DefaultCluster-wide.yaml , applied against the images.
 
 **Case 1** 
 
-For example, when both the **“trust:”** and “va:” components in the default cluster-wide policy, exhibited in the `defaultcluster-wide.yaml` file below, are set to **“false”** the policy will **not** prevent a POD deployment regardless of the integrity or any potential vulnerabilities in an image. This means that image deployment and POD creation is allowed without any issues, such as issues reported by Vulnerability Advisor and/or the trustworthiness of an image.
+For example, when both the **“trust”** and “va” components in the default cluster-wide policy, exhibited in the `defaultcluster-wide.yaml` file below, are set to **“false”** the policy will **not** prevent a POD deployment regardless of the integrity or any potential vulnerabilities in an image. This means that image deployment and POD creation is allowed without any issues, such as issues reported by Vulnerability Advisor and/or the trustworthiness of an image.
 
 ```$ vi defaultcluster-wide.yaml```
 
@@ -242,6 +243,10 @@ spec:
         - containerPort: 80
  ```
 
+**Note:**
+
+Make sure you have the correct image path in the yaml file associated with image you want to run or deploy
+
 ```$ kubectl apply -f tomcat.yaml```
 
 **Results:**
@@ -272,7 +277,7 @@ Validate that your image is deployed and is working as expect.
 
 **Case 2** 
 
-Now, let’s leave the default cluster-wide policy **“trust:”** to **“false”** and change the **“va:”** to **“true”** and see the results. To make this change you have two options:
+Now, let’s leave the default cluster-wide policy **“trust”** to **“false”** and change the **“va”** to **“true”** and see the results. To make this change you have two options:
 
 **Option 1:**
 Note: First navigate to the directory where you have cloned the repo, than execute the following commands:
@@ -314,12 +319,12 @@ spec:
 
 <img width="567" alt="image" src="https://media.github.ibm.com/user/20538/files/08e087c4-9fd7-11e8-855b-0d13dc948d24">
 
-As seen in Figure 4, the image tomcat:latest has one issue reported by the Vulnerability Advisor so POD deployment for this particular image is prevented as expected, since “va:” flag is set to “true”.
+As seen in Figure 4, the image tomcat:latest has one issue reported by the Vulnerability Advisor so POD deployment for this particular image is prevented as expected, since “va” flag is set to “true”.
 
 **Case 3:**
 
-To demonstrate the use of “trust:” flag, we consider taking an image with no vulnerability issues and try to deploy it. The tomcat:v2 image as show in Figure 4, is a secure image in the IBM Cloud image repository without any vulnerability issues. 
-Let’s modify the default cluster-wide policy “trust:” to “true” and “va:” to “false”, then execute the tomcat-v2.yaml file and analyze the outcome:
+To demonstrate the use of “trust” flag, we consider taking an image with no vulnerability issues and try to deploy it. The tomcat:v2 image as show in Figure 4, is a secure image in the IBM Cloud image repository without any vulnerability issues. 
+Let’s modify the default cluster-wide policy “trust” to “true” and “va” to “false”, then execute the tomcat-v2.yaml file and analyze the outcome:
 
 **Example of tomcat-v2.yaml File**
 
@@ -398,7 +403,7 @@ When both flags are set to “true”, as shown in the discoveries so far, the f
 
 ### Rectifying Image Issues to Pass POD Deployment 
 
-Depending on the settings of the default cluster-wide policy components, **“trust:”** and **“va:”**, there are several ways to remedy image issues in order to successfully deploy in a cluster:
+Depending on the settings of the default cluster-wide policy components, **“trust”** and **“va”**, there are several ways to remedy image issues in order to successfully deploy in a cluster:
 
 - Pull a more up-to-date image and verify that it is signed from a trusted source. This is the most common method.
 - The user can manually update an existing image and sign an image in a repository to ensure the integrity of images in your registry namespace. 
@@ -406,4 +411,4 @@ Depending on the settings of the default cluster-wide policy components, **“tr
 
 ### Summary
 
-IBM Container Image Security Enforcement custom policies are easy to be configured and most importantly contribute in pushing secure images into a namespace before the image is deployed in a cluster. Ultimately, these custom policies are put in place to safeguard a cloud environment by validating the images before allowing them to be deployed into a Kubernetes cluster.  
+IBM Container Image Security Enforcement custom policies are easy to be configured and most importantly contribute in pushing secure images into a namespace before the image is deployed in a cluster. Ultimately, these custom policies are put in place to safeguard a cloud environment by validating the images before allowing them to be deployed into a Kubernetes cluster.   
