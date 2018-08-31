@@ -117,7 +117,7 @@ According to Container Service Development member, Kristin Kronstain Brown, this
 - A namespace. How to set up a namespace can be found [here](https://console.bluemix.net/docs/services/Registry/index.html#registry_namespace_add)
 
 ```
-$ https://github.com/ibm-client-success/iks-container-registry.git && cd /contents
+$ https://github.com/ibm-client-success/iks-container-registry.git && cd contents
 ```
 
 ### Abstract:
