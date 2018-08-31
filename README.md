@@ -117,7 +117,7 @@ According to Container Service Development member, Kristin Kronstain Brown, this
 - A namespace. How to set up a namespace can be found [here](https://console.bluemix.net/docs/services/Registry/index.html#registry_namespace_add)
 
 ```
-$ https://github.com/ibm-client-success/iks-container-registry.git
+$ https://github.com/ibm-client-success/iks-container-registry.git && cd /contents
 ```
 
 ### Abstract:
@@ -162,19 +162,34 @@ policy’s flag configuration in a cluster, the image will be validated for the 
 
 <img width="359" alt="image" src="https://media.github.ibm.com/user/20538/files/623223d4-9fd5-11e8-9f1c-93cd50417eb7">
 
+The figure below shows the four possible combinations of the component flags in a cluster-wide policy and the corresponding result of attempting to deploy an untrustworthy image with vulnerabilities.
+
+**Figure 3 – High-Level Overview of the Custom Policy Possibilities Against an Image**
+
+<img width="381" alt="image" src="https://media.github.ibm.com/user/20538/files/a338563a-9fd7-11e8-8ebc-286419d8ff6b">
+
 ### Discovering the outcome of a tailored default cluster-wide policy against an image:
 
-The image list in Figure 3 displays information that can differ when the default cluster-wide policy flags **“trust:”** and **“va:”** are modified.
+In this section, we’ll see the outcomes of different custom policies applied against an image.
+
+The image list in Figure 4 displays information that can differ when the default cluster-wide policy flags **“trust:”** and **“va:”** are modified.
 
 ```$ bx cr images```
 
-**Figure 3 – IBM Cloud Image Repository**
+**Figure 4 – IBM Cloud Image Repository**
 
 <img width="516" alt="image" src="https://media.github.ibm.com/user/20538/files/bd1a364c-9fd5-11e8-95ec-38f3d9f11078">
 
-For example, when both the **“trust:”** and “va:” components in the default cluster-wide policy, exhibited in the [DefaultCluster-wide.yaml](https://github.com/ibm-client-success/iks-container-registry/blob/master/vulnerability-scanning-bluemix/contents/defaultclusterwidepolicy_ff.yaml) file below, are set to **“false”** the policy will **not** prevent a POD deployment regardless of the integrity or any potential vulnerabilities in an image. This means that image deployment and POD creation is allowed without any issues, such as issues reported by Vulnerability Advisor and/or the trustworthiness of an image.
+Figure 4 displays the list of images in a namespace. 
+As shown, there are few images with security issues and others with no security issues. We can see how the deployment of these images will be affected when we enforce image security using a default Cluster-Wide policy. 
 
-```$ vi DefaultCluster-wide.yaml```
+Below, we will see the outcomes of four different cases of custom policies by changing the “trust:” and “va:” flags from DefaultCluster-wide.yaml , applied against the images.
+
+**Case 1** 
+
+For example, when both the **“trust:”** and “va:” components in the default cluster-wide policy, exhibited in the `defaultcluster-wide.yaml` file below, are set to **“false”** the policy will **not** prevent a POD deployment regardless of the integrity or any potential vulnerabilities in an image. This means that image deployment and POD creation is allowed without any issues, such as issues reported by Vulnerability Advisor and/or the trustworthiness of an image.
+
+```$ vi defaultcluster-wide.yaml```
 
 ```
 apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
@@ -193,13 +208,13 @@ spec:
           enabled: false
  ```
 
-```$ kubectl apply -f DefaultCluster-wide.yaml```
+```$ kubectl apply -f defaultcluster-wide.yaml```
 
 **Results:**
 
 <img width="518" alt="image" src="https://media.github.ibm.com/user/20538/files/08b06338-9fd6-11e8-9e94-1deb83c11f3e">
 
-Attempting to deploy the **tomcat:latest** image using the [tomcat.yaml](https://github.com/ibm-client-success/iks-container-registry/blob/master/vulnerability-scanning-bluemix/contents/tomcatdeployment.yaml) file example:
+Attempting to deploy the **tomcat:latest** image using the `tomcat.yaml` file example:
 
 **Example of tomcat.yaml File**
 
@@ -255,9 +270,20 @@ Validate that your image is deployed and is working as expect.
 
 <img width="387" alt="image" src="https://media.github.ibm.com/user/20538/files/9dac6c3e-9fd6-11e8-87a5-e914cfad5fb6">
 
-Now, let’s leave the default cluster-wide policy **“trust:”** to **“false”** and change the **“va:”** to **“true”** and see the results: 
+**Case 2** 
 
-```$ vi DefaultCluster-wide.yaml```
+Now, let’s leave the default cluster-wide policy **“trust:”** to **“false”** and change the **“va:”** to **“true”** and see the results. To make this change you have two options:
+
+**Option 1:**
+Note: First navigate to the directory where you have cloned the repo, than execute the following commands:
+
+```
+sed -i -e '15 s/enabled: false/enabled: true/' contents/defaultcluster-wide.yaml
+```
+
+**Option 2:**
+
+```$ vi defaultcluster-wide.yaml```
 
 ```
 apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
@@ -276,7 +302,7 @@ spec:
           enabled: true
 ```
 
-```$ kubectl apply -f DefaultCluster-wide.yaml```
+```$ kubectl apply -f defaultcluster-wide.yaml```
 
 **Results:**
 
@@ -288,9 +314,12 @@ spec:
 
 <img width="567" alt="image" src="https://media.github.ibm.com/user/20538/files/08e087c4-9fd7-11e8-855b-0d13dc948d24">
 
-Image **tomcat:latest** has one issue reported by the Vulnerability Advisor so POD deployment for this particular image will be prevented.
+As seen in Figure 4, the image tomcat:latest has one issue reported by the Vulnerability Advisor so POD deployment for this particular image is prevented as expected, since “va:” flag is set to “true”.
 
-By having a secure image in the IBM Cloud image repository without any vulnerability issues, we can attempt to deploy the [tomcat:v2](https://github.com/ibm-client-success/iks-container-registry/blob/master/vulnerability-scanning-bluemix/contents/tomcatv2.yaml) image. Let’s modify the default cluster-wide policy **“trust:”** to **“true”** and **“va:”** to **“false”**, then execute the tomcat-v2.yaml file and analyze the outcome:
+**Case 3:**
+
+To demonstrate the use of “trust:” flag, we consider taking an image with no vulnerability issues and try to deploy it. The tomcat:v2 image as show in Figure 4, is a secure image in the IBM Cloud image repository without any vulnerability issues. 
+Let’s modify the default cluster-wide policy “trust:” to “true” and “va:” to “false”, then execute the tomcat-v2.yaml file and analyze the outcome:
 
 **Example of tomcat-v2.yaml File**
 
@@ -318,7 +347,19 @@ spec:
         - containerPort: 80
 ```
 
-```$ vi DefaultCluster-wide.yaml ```
+To modify the `defaultcluster-wide.yaml` you have two options:
+
+**Option 1:**
+Note: First navigate to the directory where you have cloned the repo, than execute the following commands:
+
+```
+sed -i -e '13 s/enabled: false/enabled: true/' contents/defaultcluster-wide.yaml
+sed -i -e '15 s/enabled: true/enabled: false/' contents/defaultcluster-wide.yaml
+```
+
+**Option 2:**
+
+```$ vi defaultcluster-wide.yaml```
 
 ```
 apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
@@ -337,7 +378,7 @@ spec:
           enabled: false
 ```
 
-```$ kubectl apply -f DefaultCluster-wide.yaml```
+```$ kubectl apply -f defaultcluster-wide.yaml```
 
 **Results:**
 
@@ -351,13 +392,9 @@ spec:
 
 Deployment of the **tomcat:v2** image has been denied because the system has determined that this particular image was not signed when it was pulled from the source and is untrustworthy.
 
-As shown in the discoveries thus far, the first flag of the default cluster-wide policy is applied, and the image is scanned to ensure its integrity before it is staged for deployment. Therefore, if the image is not signed and it is not from a trusted source, then the deployment will be denied, and the second flag of the policy will not be applied. Deployment will cease at this point. 
+**Case 4:**
 
-The figure below shows the four possible combinations of the component flags in a cluster-wide policy and the corresponding result of attempting to deploy an untrustworthy image with vulnerabilities.
-
-**Figure 4 – High-Level Overview of the Custom Policy Possibilities Against an Image**
-
-<img width="381" alt="image" src="https://media.github.ibm.com/user/20538/files/a338563a-9fd7-11e8-8ebc-286419d8ff6b">
+When both flags are set to “true”, as shown in the discoveries so far, the first flag of the default cluster-wide policy is applied first.  Therefore, if the image is not signed and it is not from a trusted source, then the deployment will be denied, and the second flag of the policy will not be applied. Deployment will cease at this point. 
 
 ### Rectifying Image Issues to Pass POD Deployment 
 
@@ -369,4 +406,4 @@ Depending on the settings of the default cluster-wide policy components, **“tr
 
 ### Summary
 
-IBM Container Image Security Enforcement custom policies are easy to be configured and most importantly contribute in pushing secure images into a namespace before the image is deployed in a cluster. Ultimately, these custom policies are put in place to safeguard a cloud environment by validating the images before allowing them to be deployed into a kubernetes cluster.  
+IBM Container Image Security Enforcement custom policies are easy to be configured and most importantly contribute in pushing secure images into a namespace before the image is deployed in a cluster. Ultimately, these custom policies are put in place to safeguard a cloud environment by validating the images before allowing them to be deployed into a Kubernetes cluster.  
